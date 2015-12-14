@@ -31,12 +31,12 @@
         }  
     };
 
-    var viewHeight = $(window).height();
+    var $body = $('html, body');
 
+    function Parallax( $wrap, options ) {
 
-    function Parallax( $this, options ) {
-
-        this.$scroll = $this;
+        this.$win = $(window);
+        this.$wrap = $wrap;
         this.opts = $.extend(true, {}, defaults, options || {});
 
         this.init();
@@ -47,6 +47,23 @@
      * 初始化
      */
     Parallax.prototype.init = function(){
+        var that = this;
+
+        this.$list = $(this.opts.listEl);
+
+        if(!this.$list.length) {
+            return;
+        }
+
+        this.viewHeight = 0;
+        this.pageActive = 0;
+        // 方向
+        this.direction = null;
+
+
+
+        this.uploadHeight();
+
         this.bind();
     };
 
@@ -58,11 +75,48 @@
         var that = this,
             timer = null;
 
-        this.$wrap.on('scroll', function() {
+        this.$win.on('mousewheel.parallax', function(event, delta) {
+            console.log(delta);
+            //event.preventDefault();
+            that.scrollEvent(event);
+        });
+
+        this.$win.on('resize.parallax', function(event) {
             timer = setTimeout(function() {
-                that.getLoadMore( that.$wrap );
+                that.uploadHeight();
             }, 300);
         });
+    };
+
+    /**
+     * 滚动事件
+     */
+    Parallax.prototype.scrollEvent = function(event) {
+        var that = this;
+
+        this.direction = (event.deltaY >= 1) ? 'up' : 'down';
+
+        console.log(this.direction);
+
+    };
+
+    /**
+     * 更新列表高度
+     */
+    Parallax.prototype.uploadHeight = function() {
+        var that = this;
+
+        this.viewHeight = this.$win.height();
+
+        $body
+            .css({
+                height: this.viewHeight,
+                overflow: 'hidden'
+            });
+
+        this.$list.css({
+            height: this.viewHeight
+        })
     };
 
     $.fn.parallax = function( options ) {

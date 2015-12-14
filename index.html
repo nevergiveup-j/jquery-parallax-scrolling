@@ -37,7 +37,7 @@ a:hover {
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap" id="J_wrap">
 	<div class="parallax-list">
 		page1
 	</div>
@@ -54,9 +54,10 @@ a:hover {
 </body>
 </html>
 <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="jquery.mousewheel.min.js"></script>
 <script src="jquery.parallax-scroll.js"></script>
 <script>
-$(window).parallax({
+$('#J_wrap').parallax({
 	listEl: '.parallax-list'
 });
 </script>
