@@ -69,12 +69,8 @@
     var defaults = {
         // 列表元素
         listEl: '.parallax-list',
-        // 刷新回调
-        refreshCallback: function() {
-
-        },
-        // 加载更多回调
-        loadingMoreCallback: function() {
+        // 成功回调
+        successCallback: function() {
 
         }  
     };
@@ -104,6 +100,7 @@
         }
 
         this.viewHeight = 0;
+        this.pageCount = this.$list.length;
         // 当前页
         this.pageActive = 0;
         // 方向
@@ -181,21 +178,33 @@
             return;
         }
 
-        that.isSwitchPage = true;
-
         if(this.direction == 'up'){
+            if(this.pageActive <= 0){
+                return;
+            }
             this.pageActive--;
         }else{
+            if(this.pageActive >= this.pageCount - 1){
+                return;
+            }
             this.pageActive++;
         }
 
+        this.isSwitchPage = true;
+
         var deltaY = -(this.pageActive * this.viewHeight) + 'px';
 
-        console.log(deltaY);
-
         this.$wrap
-            .css(Util.prefixStyle('transition'), 'all .3s')
+            .css(Util.prefixStyle('transition'), 'all 1000ms cubic-bezier(0.86, 0, 0.07, 1)')
             .css(Util.prefixStyle('transform'), 'translate(0, '+ deltaY +')');
+
+        this.$list.eq(this.pageActive).addClass('parallax-active');
+
+        this.opts.successCallback && this.opts.successCallback(this.direction, this.pageActive);
+
+        setTimeout(function() {
+            that.isSwitchPage = false;
+        }, 2000);
 
     };
 
@@ -203,6 +212,17 @@
         return this.each(function() {
             new Parallax( $(this), options );
         })
+    };
+
+    /**
+     * 监听CSS3动画执行结束
+     * @param callback
+     * @returns {$.fn}
+     */
+    $.fn.cssEnd = function ( callback ){
+        var EventAnimateEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        this.one(EventAnimateEnd , callback);
+        return this;
     };
     
     // ADM 
