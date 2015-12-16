@@ -69,6 +69,8 @@
     var defaults = {
         // 列表元素
         listEl: '.parallax-list',
+        // 导航
+        navListEl: '.pages-nav li',
         // 成功回调
         successCallback: function() {
 
@@ -98,6 +100,8 @@
         if(!this.$list.length) {
             return;
         }
+
+        this.$navList = $(this.opts.navListEl);
 
         this.viewHeight = 0;
         this.pageCount = this.$list.length;
@@ -200,11 +204,26 @@
 
         this.$list.eq(this.pageActive).addClass('parallax-active');
 
+        if(this.$navList.length == this.pageCount){
+            this.taggleNav();
+        }
+
         this.opts.successCallback && this.opts.successCallback(this.direction, this.pageActive);
 
         setTimeout(function() {
             that.isSwitchPage = false;
         }, 2000);
+
+    };
+
+    /**
+     *
+     */
+    Parallax.prototype.taggleNav = function() {
+        var that = this;
+
+        this.$navList.removeClass('active');
+        this.$navList.eq(this.pageActive).addClass('active');
 
     };
 
