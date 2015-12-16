@@ -1,9 +1,9 @@
 /**
  * @Description: 下拉到底部和上拉到顶部再拉就出现刷新效果
  * @Author: wangjun
- * @Update: 2015-10-29 13:27
+ * @Update: 2015-12-16 22:29
  * @version: 1.1
- * @Github URL: https://github.com/nevergiveup-j/zepto-refresh
+ * @Github https://github.com/nevergiveup-j/jquery-parallax-scrolling
  */
  
 ;(function (factory) {
